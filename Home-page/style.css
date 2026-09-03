@@ -11,6 +11,15 @@
    CHANGED: Removed --gold entirely; --accent is now the sole
             highlight color used everywhere consistently.
    Typography: system-font stack — no external dependency
+
+   FEATURE #7 — User-Friendly Interface (this pass)
+   - Consistent min-height on every clickable control so tap
+     targets are comfortably large on mobile (44px rule of thumb)
+   - Visible focus-visible outlines for keyboard users
+   - Small icon utility classes so icons can sit next to text
+     on buttons / contact info without one-off CSS per page
+   - body/main/footer now form a column flex layout so the
+     footer always sits at the bottom, even on short pages
 ============================================================ */
 
 /* ── Reset & Base ─────────────────────────────────────────── */
@@ -40,18 +49,133 @@
   /* CHANGED: Added a max content width (~1100px) so text doesn't
      stretch edge-to-edge on large screens (readability requirement). */
   --content-max: 1140px;
+
+  /* CHANGED (Feature #7): minimum comfortable tap target size,
+     used across buttons, nav links, form fields, footer links. */
+  --tap-target: 44px;
+}
+
+/* ============================================================
+   DARK MODE
+   Toggled by JS setting data-theme="dark" on <html>.
+   Choice is remembered in localStorage; falls back to the
+   visitor's OS-level preference on first visit.
+   Same variable names, so every existing rule (buttons, nav,
+   contact card, etc.) picks up the new colors automatically —
+   nothing else in this file needs to change.
+============================================================ */
+[data-theme="dark"] {
+  --bg:      #17120f;
+  --surface: #1f1815;
+  --border:  #3a2a26;
+  --text:    #f1e9e6;
+  --muted:   #b9a29c;
+  --accent:  #e08a7d;
+}
+
+[data-theme="dark"] .contact-card {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .form-row input,
+[data-theme="dark"] .form-row textarea {
+  background: #221a17;
+}
+
+/* ── Dark mode toggle: sliding pill switch ────────────────── */
+/* Visual match for the sun/moon pill reference: a bold-outlined
+   capsule with the icon sliding from the sun (left, light mode)
+   to the crescent moon (right, dark mode). */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  height: var(--tap-target);
+  padding: 0 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.theme-switch-track {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 2px solid var(--text);
+  background: var(--bg);
+  overflow: hidden;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.theme-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: transform var(--transition), color var(--transition);
+}
+
+.theme-switch-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.theme-switch-thumb .icon-moon {
+  display: none;
+}
+
+/* Dark mode: thumb slides to the right and swaps to the
+   filled crescent moon. Track is 56px of usable inner width
+   (60px minus the 2px border on each side); thumb is 20px wide
+   with a 3px margin on both ends, so it travels 56 - 20 - 6 = 30px. */
+[data-theme="dark"] .theme-switch-thumb {
+  transform: translateX(30px);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .theme-switch-thumb .icon-sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-switch-thumb .icon-moon {
+  display: block;
+}
+
+.theme-switch:hover .theme-switch-track {
+  border-color: var(--accent);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+/* CHANGED (Feature #7): body is now a column flexbox so the
+   footer stays pinned to the bottom of the viewport on pages
+   with little content, instead of floating right under the
+   content. */
 body {
   font-family: var(--font);
   font-size: 19px;
   line-height: 1.7;
   color: var(--text);
   background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 a {
@@ -67,8 +191,18 @@ ul {
   list-style: none;
 }
 
+/* CHANGED (Feature #7): Added focus-visible styles site-wide so
+   keyboard users can always see which control is focused —
+   this was a TODO left in the original file. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* ── Layout Container ─────────────────────────────────────── */
-/* TODO: Feature #5 (Responsive Design) — adjust max-width or padding as needed */
 /* CHANGED: max-width tightened to --content-max (1140px) to prevent
    text from stretching on wide screens. Previously 1400px. */
 .container {
@@ -79,9 +213,15 @@ ul {
 }
 
 /* ── Buttons ──────────────────────────────────────────────── */
-/* TODO: Feature #6 (User-Friendly UI) — add focus-visible styles, size variants */
+/* CHANGED (Feature #7): buttons now guarantee a minimum tap
+   target height and center their contents, so an icon + label
+   pair (e.g. "✉ Send Message") lines up cleanly. */
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--tap-target);
   padding: 0.65rem 1.6rem;
   border-radius: var(--radius);
   font-size: 0.9rem;
@@ -106,6 +246,14 @@ ul {
   color: #fff;
   border-color: var(--accent);
   text-decoration: none;
+}
+
+/* CHANGED (Feature #7): icon utility for inside buttons or list
+   items — keeps icon glyphs a consistent size next to text. */
+.btn .icon,
+.contact-list .icon {
+  font-size: 1.05em;
+  line-height: 1;
 }
 
 
@@ -144,7 +292,6 @@ ul {
 }
 
 /* ── Navigation Menu (Feature #1) ─────────────────────────── */
-/* TODO: Feature #1 — Wire up active states, dropdowns, etc. */
 .main-nav {
   flex: 1;
 }
@@ -158,13 +305,19 @@ ul {
 /* CHANGED: Nav link hover now shifts color to --accent (maroon) and
    adds a bottom-border underline-style effect instead of a background
    tint, signalling interactivity with the single accent color. */
+/* CHANGED (Feature #7): links now use flex + min-height so the
+   whole padded area is a comfortable, consistent tap target,
+   not just the text baseline. */
 .nav-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
   color: var(--muted);
   font-size: 0.9rem;
   padding: 0.35rem 0.7rem;
   border-radius: var(--radius);
   border-bottom: 2px solid transparent;
-  transition: color var(--transition), border-color var(--transition);
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
 
 .nav-list a:hover {
@@ -173,12 +326,24 @@ ul {
   text-decoration: none;
 }
 
+/* CHANGED (Feature #7): clear "you are here" indicator so users
+   always know which page they're on — was missing before. */
+.nav-list a[aria-current="page"] {
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
+}
+
 /* Hamburger toggle — hidden on desktop */
+/* CHANGED (Feature #7): toggle button now meets the tap-target size. */
 .nav-toggle {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
+  width: var(--tap-target);
+  height: var(--tap-target);
   background: none;
   border: none;
   cursor: pointer;
@@ -196,12 +361,6 @@ ul {
 }
 
 /* ── Search Bar (Feature #4) ──────────────────────────────── */
-/* TODO: Feature #4 — Add working search logic, results dropdown, etc. */
-/* CHANGED: Search bar wrapped in a dashed-border placeholder box
-   matching .placeholder-text style, so it reads as "to be built"
-   consistently with About Us and Contact. The outer .search-form
-   border is now dashed + maroon-tinted; internal padding increased
-   so it doesn't look cramped. */
 .search-form {
   display: flex;
   align-items: center;
@@ -212,11 +371,11 @@ ul {
   background: var(--bg);
 }
 
-/* CHANGED: Input padding increased from 0.4rem/0.75rem to
-   0.55rem/1rem so the field feels roomier. */
+/* CHANGED (Feature #7): input now meets the tap-target height. */
 #search-input {
   border: none;
   outline: none;
+  min-height: var(--tap-target);
   padding: 0.55rem 1rem;
   font-size: 0.875rem;
   font-family: var(--font);
@@ -230,11 +389,14 @@ ul {
   font-style: italic; /* mirrors placeholder-text italic style */
 }
 
-/* CHANGED: Submit button padding increased for breathing room. */
+/* CHANGED (Feature #7): submit button now meets the tap-target
+   size in both directions (was too narrow to tap comfortably). */
 .search-form button {
   background: none;
   border: none;
   border-left: 1px dashed var(--border);
+  min-height: var(--tap-target);
+  min-width: var(--tap-target);
   padding: 0.55rem 0.85rem;
   cursor: pointer;
   color: var(--muted);
@@ -250,14 +412,9 @@ ul {
 /* ============================================================
    HERO SECTION
 ============================================================ */
-/* CHANGED: Hero uses --surface (soft pink) as its background,
-   which is the first "pink" section. The next section (intro)
-   will be white, creating the alternating pattern. */
 .hero {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  /* CHANGED: Vertical padding uses --section-pad token for
-     uniform rhythm; hero gets a slightly taller feel via extra top. */
   padding: 8rem 0 7rem;
   text-align: center;
 }
@@ -270,8 +427,6 @@ ul {
   margin-bottom: 1rem;
 }
 
-/* CHANGED: Hero highlighted span now uses --accent (maroon) instead
-   of --gold. This enforces the single-accent-color rule. */
 .hero-title span {
   color: var(--accent);
 }
@@ -293,21 +448,13 @@ ul {
      intro         → --bg      (white)
      about         → --surface (pink)
      contact       → --bg      (white)
-   CHANGED: Previously every section used --surface as default.
-   Now only alternating sections use it so pink reads as an
-   accent rather than the default canvas color.
 ============================================================ */
 
-/* ── Intro / "What We're About" section ───────────────────── */
-/* CHANGED: Explicitly white (--bg) so it contrasts with the
-   pink hero above and the pink about-section below. */
 .intro-section {
   background: var(--bg);
   padding: var(--section-pad);
 }
 
-/* CHANGED: Section headings now use --accent (maroon) so the
-   single accent color anchors every section visually. */
 .intro-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
@@ -323,9 +470,6 @@ ul {
 }
 
 /* ── About Section (Feature #2) ───────────────────────────── */
-/* TODO: Feature #2 — Build out team bios, mission statement cards, etc. */
-/* CHANGED: Keeps --surface background (pink) — second in the
-   alternating sequence (hero=pink, intro=white, about=pink). */
 .about-section {
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -333,7 +477,6 @@ ul {
   padding: var(--section-pad);
 }
 
-/* CHANGED: Heading uses --accent for consistency. */
 .about-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
@@ -341,15 +484,11 @@ ul {
 }
 
 /* ── Contact Section (Feature #3) ────────────────────────── */
-/* TODO: Feature #3 — Build out contact form, map, social links, etc. */
-/* CHANGED: Explicitly white (--bg) — fourth in the alternating
-   sequence (hero=pink, intro=white, about=pink, contact=white). */
 .contact-section {
   background: var(--bg);
   padding: var(--section-pad);
 }
 
-/* CHANGED: Heading uses --accent for consistency. */
 .contact-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
@@ -445,9 +584,12 @@ ul {
   color: var(--text);
 }
 
+/* CHANGED (Feature #7): inputs/textarea now meet the tap-target
+   height so they're easy to tap and edit on mobile. */
 .form-row input,
 .form-row textarea {
   width: 100%;
+  min-height: var(--tap-target);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.8rem 0.9rem;
@@ -456,12 +598,26 @@ ul {
   background: #fff;
 }
 
+.form-row textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
 .form-row input:focus,
 .form-row textarea:focus {
   outline: 2px solid rgba(128, 0, 0, 0.15);
   border-color: var(--accent);
 }
 
+/* CHANGED (Feature #7): the submit button now fills the card
+   width on the contact form so it reads as the obvious next step. */
+.contact-form .btn {
+  width: 100%;
+}
+
+/* CHANGED (Feature #7): contact list items now lay out icon +
+   text side by side so each contact method is scannable at a
+   glance (email / phone / location / hours). */
 .contact-list {
   display: flex;
   flex-direction: column;
@@ -470,11 +626,18 @@ ul {
 
 .contact-list li {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.contact-list .icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
 }
 
 .contact-list .label {
+  display: block;
   color: var(--accent);
   font-size: 0.8rem;
   font-weight: 700;
@@ -489,11 +652,6 @@ ul {
 }
 
 /* ── Shared Placeholder Style ─────────────────────────────── */
-/* CHANGED: Applied to both .placeholder-text (About Us, Contact)
-   AND the search form area. Dashed border + italic muted text is
-   the single visual language for "feature hook — not yet built."
-   Border color brightened slightly to var(--accent) at low opacity
-   so placeholders tie back to the accent palette. */
 .placeholder-text {
   color: var(--muted);
   font-style: italic;
@@ -508,14 +666,15 @@ ul {
 /* ============================================================
    FOOTER
 ============================================================ */
-/* CHANGED: Footer uses --surface so it visually "closes" the page
-   with the same warm tint as other surface sections. */
 .site-footer {
   background: var(--surface);
   border-top: 1px solid var(--border);
   padding: 1.5rem 0;
 }
 
+/* CHANGED (Feature #7): footer now sits at the very bottom of the
+   viewport via the body/main flex layout above, instead of
+   floating directly under short content. */
 .footer-inner {
   display: flex;
   align-items: center;
@@ -534,7 +693,12 @@ ul {
   gap: 1.25rem;
 }
 
+/* CHANGED (Feature #7): footer links now meet the tap-target
+   height so they're easy to tap on mobile. */
 .footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
   font-size: 0.825rem;
   color: var(--muted);
 }
@@ -546,7 +710,6 @@ ul {
 
 /* ============================================================
    RESPONSIVE DESIGN (Feature #5)
-   TODO: Feature #5 — Expand these breakpoints as new features are added.
    Breakpoints:
      Mobile:  max-width 600px
      Tablet:  601px – 900px
@@ -561,6 +724,10 @@ ul {
 
   #search-input {
     width: 130px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -602,10 +769,9 @@ ul {
     width: 100%;
   }
 
-  /* CHANGED: Mobile nav links lose the bottom-border hover trick
-     (meaningless in a vertical dropdown) — keep color shift only. */
   .nav-list a {
-    display: block;
+    display: flex;
+    width: 100%;
     padding: 0.6rem 1rem;
     border-radius: 0;
     border-bottom: none;
@@ -614,6 +780,24 @@ ul {
   /* Shrink or hide search on very small screens */
   .search-form {
     display: none;
+  }
+
+  /* CHANGED (Feature: Dark Mode): shrink the switch slightly on
+     mobile so it doesn't crowd the logo + hamburger. */
+  .theme-switch-track {
+    width: 52px;
+    height: 26px;
+  }
+
+  .theme-switch-thumb {
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+  }
+
+  [data-theme="dark"] .theme-switch-thumb {
+    transform: translateX(24px);
   }
 
   .header-inner {
@@ -628,7 +812,6 @@ ul {
     padding: 4rem 0;
   }
 
-  /* CHANGED: section padding scaled down for mobile. */
   .intro-section,
   .about-section,
   .contact-section {

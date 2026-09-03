@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var theme = stored || (prefersDark ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill Issue Inc.</title>
@@ -10,35 +18,53 @@
 
   <!-- ========================================================
        HEADER
-       Feature Hook: Navigation Menu (#main-nav)
-       Feature Hook: Search Bar (#search-form / #search-input)
+       Feature #7: User-Friendly Interface
+       - aria-current marks the active page so users always know where they are
+       - Search button keeps an icon AND an aria-label (icon-only buttons need a text label for screen readers)
   ======================================================== -->
   <header class="site-header">
     <div class="container header-inner">
 
-      <!-- Site Logo / Name -->
       <a href="index.html" class="logo">Skill Issue Inc.</a>
 
-      <!-- TODO: Feature #1 — Navigation Menu
-           Add page links (Home, About, Contact, etc.) inside this <ul>.
-           A mobile hamburger toggle can also be wired up here. -->
       <nav class="main-nav" aria-label="Main navigation">
         <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
           <span></span><span></span><span></span>
         </button>
         <ul id="main-nav" class="nav-list">
-          <li><a href="index.html#hero">Home</a></li>
+          <li><a href="index.html#hero" aria-current="page">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </nav>
 
-      <!-- TODO: Feature #4 — Search Bar
-           Wire up search logic (filter, API call, etc.) to this form. -->
       <form id="search-form" class="search-form" role="search" autocomplete="off">
-        <input id="search-input" type="text" placeholder="Search..." aria-label="Search" />
-        <button type="submit" aria-label="Submit search">&#9906;</button>
+        <input id="search-input" type="text" placeholder="Search..." aria-label="Search the site" />
+        <button type="submit" aria-label="Submit search">
+          <span aria-hidden="true">&#9906;</span>
+        </button>
       </form>
+
+      <button id="theme-toggle" class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Toggle dark mode">
+        <span class="theme-switch-track">
+          <span class="theme-switch-thumb">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </span>
+      </button>
 
     </div>
   </header>
@@ -54,11 +80,12 @@
         A place where passionate people tackle problems, share knowledge,<br />
         and turn every challenge into a learning opportunity.
       </p>
-      <!-- TODO: Update href when target page is ready -->
-      <a href="about.html" class="btn btn-primary">Learn More</a>
+      <!-- Descriptive button label instead of a vague "Click Here" -->
+      <a href="about.html" class="btn btn-primary">
+        <span aria-hidden="true">&#8594;</span> Learn About Us
+      </a>
     </div>
   </section>
-
 
 
   <main id="main-content">
@@ -85,7 +112,9 @@
         <p>
           Have a question, collaboration idea, or just want to say hello? We’d love to hear from you.
         </p>
-        <a href="contact.html" class="btn btn-primary">Visit Contact Page</a>
+        <a href="contact.html" class="btn btn-primary">
+          <span aria-hidden="true">&#9993;</span> Visit Contact Page
+        </a>
       </div>
     </section>
 
@@ -107,11 +136,6 @@
   </footer>
 
 
-  <!-- ========================================================
-       MINIMAL JS — Mobile nav toggle only
-       TODO: Feature #5 (Responsive) — Expand toggle behaviour as needed.
-       TODO: Feature #6 (User-Friendly UI) — Add focus trap, ARIA updates, etc.
-  ======================================================== -->
   <script>
     const toggle = document.getElementById('nav-toggle');
     const navList = document.getElementById('main-nav');
@@ -126,6 +150,23 @@
         navList.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
       });
+    });
+
+    // Dark mode toggle
+    var themeToggle = document.getElementById('theme-toggle');
+
+    function reflectTheme(theme) {
+      themeToggle.setAttribute('aria-checked', theme === 'dark');
+    }
+
+    reflectTheme(document.documentElement.getAttribute('data-theme') || 'light');
+
+    themeToggle.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      reflectTheme(next);
     });
   </script>
 
