@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Issue Inc.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========================================================
+       HEADER
+       Feature Hook: Navigation Menu (#main-nav)
+       Feature Hook: Search Bar (#search-form / #search-input)
+  ======================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <!-- Site Logo / Name -->
+      <a href="index.html" class="logo">Skill Issue Inc.</a>
+
+      <!-- TODO: Feature #1 — Navigation Menu
+           Add page links (Home, About, Contact, etc.) inside this <ul>.
+           A mobile hamburger toggle can also be wired up here. -->
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul id="main-nav" class="nav-list">
+          <li><a href="#hero">Home</a></li>
+          <!-- TODO: Feature #2 — About Us: add link below -->
+          <li><a href="#about">About</a></li>
+          <!-- TODO: Feature #3 — Contact Page: add link below -->
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- TODO: Feature #4 — Search Bar
+           Wire up search logic (filter, API call, etc.) to this form. -->
+      <form id="search-form" class="search-form" role="search" autocomplete="off">
+        <input id="search-input" type="text" placeholder="Search..." aria-label="Search" />
+        <button type="submit" aria-label="Submit search">&#9906;</button>
+      </form>
+
+    </div>
+  </header>
+
+
+  <!-- ========================================================
+       HERO SECTION
+  ======================================================== -->
+  <section id="hero" class="hero">
+    <div class="container hero-inner">
+      <h1 class="hero-title">Welcome to <span>Skill Issue Inc.</span></h1>
+      <p class="hero-subtitle">
+        A place where passionate people tackle problems, share knowledge,<br />
+        and turn every challenge into a learning opportunity.
+      </p>
+      <!-- TODO: Update href when target page is ready -->
+      <a href="#about" class="btn btn-primary">Learn More</a>
+    </div>
+  </section>
+
+
+
+  <main id="main-content">
+    <section class="intro-section">
+      <div class="container">
+        <h2>What We're About</h2>
+        <p>
+          Skill Issue Inc. is a collaborative group built around continuous learning and creative problem-solving.
+          Whether you're a beginner finding your footing or a seasoned developer expanding your toolkit, there's
+          a place here for you. We believe that every "skill issue" is just a skill waiting to be unlocked.
+        </p>
+        <p>
+          <!-- TODO: Replace this placeholder text with real content once the group's goals are finalized. -->
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula sapien eget felis tincidunt,
+          vel dapibus velit accumsan. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
+          ac turpis egestas. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquet nisl.
+        </p>
+      </div>
+    </section>
+
+
+    <section id="about" class="about-section">
+      <div class="container">
+        <h2>About Us</h2>
+        <!-- TODO: Feature #2 — About Us content goes here -->
+        <p class="placeholder-text">About Us content coming soon.</p>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         TODO: Feature #3 — Contact Page
+         Build out this section with a contact form or details.
+    ============================================================ -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <h2>Contact</h2>
+        <!-- TODO: Feature #3 — Contact form / info goes here -->
+        <p class="placeholder-text">Contact information coming soon.</p>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================================================
+       FOOTER
+  ======================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; 2026 Skill Issue Inc. All rights reserved.</p>
+      <ul class="footer-links">
+        <!-- TODO: Feature #3 — Replace with real contact/social links -->
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+        <!-- TODO: Add social media icon links here -->
+        <li><a href="#" aria-label="GitHub">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+
+  <!-- ========================================================
+       MINIMAL JS — Mobile nav toggle only
+       TODO: Feature #5 (Responsive) — Expand toggle behaviour as needed.
+       TODO: Feature #6 (User-Friendly UI) — Add focus trap, ARIA updates, etc.
+  ======================================================== -->
+  <script>
+    const toggle = document.getElementById('nav-toggle');
+    const navList = document.getElementById('main-nav');
+
+    toggle.addEventListener('click', function () {
+      const isOpen = navList.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    navList.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navList.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+
+</body>
+</html>

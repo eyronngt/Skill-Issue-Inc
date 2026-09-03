@@ -1,0 +1,510 @@
+/* ============================================================
+   style.css — Skill Issue Inc.
+   Palette (Polytechnic University of the Philippines colors):
+     --bg:      #ffffff  (page background — white sections)
+     --surface: #fdf5f5  (alternate sections — soft warm pink)
+     --border:  #e8d0d0  (subtle dividers — warm tint)
+     --text:    #1f2328  (primary text)
+     --muted:   #6b5050  (secondary text, placeholders)
+     --accent:  #800000  (PUP Maroon — SINGLE accent: headings,
+                          buttons, links, highlights, hover states)
+   CHANGED: Removed --gold entirely; --accent is now the sole
+            highlight color used everywhere consistently.
+   Typography: system-font stack — no external dependency
+============================================================ */
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:      #ffffff;
+  --surface: #fdf5f5;
+  --border:  #e8d0d0;
+  --text:    #1f2328;
+  --muted:   #6b5050;
+  --accent:  #800000;
+  /* CHANGED: --gold removed; maroon is now the single accent color */
+
+  --font: -apple-system, "Segoe UI", system-ui, Arial, sans-serif;
+  --radius: 6px;
+  --transition: 0.2s ease;
+
+  /* CHANGED: Added a shared section-padding token so every section
+     uses the same vertical rhythm (uniform spacing requirement). */
+  --section-pad: 6rem 0;
+
+  /* CHANGED: Added a max content width (~1100px) so text doesn't
+     stretch edge-to-edge on large screens (readability requirement). */
+  --content-max: 1140px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 19px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ── Layout Container ─────────────────────────────────────── */
+/* TODO: Feature #5 (Responsive Design) — adjust max-width or padding as needed */
+/* CHANGED: max-width tightened to --content-max (1140px) to prevent
+   text from stretching on wide screens. Previously 1400px. */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+/* TODO: Feature #6 (User-Friendly UI) — add focus-visible styles, size variants */
+.btn {
+  display: inline-block;
+  padding: 0.65rem 1.6rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition);
+  border: 2px solid transparent;
+}
+
+/* CHANGED: btn-primary is now a ghost/outline button (transparent fill,
+   maroon border + text) instead of a solid dark block. This fits the
+   minimalist palette while still using the single accent color. */
+.btn-primary {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+
+/* ============================================================
+   HEADER
+   Feature Hook: #main-nav (Feature #1 — Navigation Menu)
+   Feature Hook: #search-form (Feature #4 — Search Bar)
+============================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 70px;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.logo:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ── Navigation Menu (Feature #1) ─────────────────────────── */
+/* TODO: Feature #1 — Wire up active states, dropdowns, etc. */
+.main-nav {
+  flex: 1;
+}
+
+.nav-list {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+/* CHANGED: Nav link hover now shifts color to --accent (maroon) and
+   adds a bottom-border underline-style effect instead of a background
+   tint, signalling interactivity with the single accent color. */
+.nav-list a {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius);
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.nav-list a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+/* Hamburger toggle — hidden on desktop */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius);
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* ── Search Bar (Feature #4) ──────────────────────────────── */
+/* TODO: Feature #4 — Add working search logic, results dropdown, etc. */
+/* CHANGED: Search bar wrapped in a dashed-border placeholder box
+   matching .placeholder-text style, so it reads as "to be built"
+   consistently with About Us and Contact. The outer .search-form
+   border is now dashed + maroon-tinted; internal padding increased
+   so it doesn't look cramped. */
+.search-form {
+  display: flex;
+  align-items: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg);
+}
+
+/* CHANGED: Input padding increased from 0.4rem/0.75rem to
+   0.55rem/1rem so the field feels roomier. */
+#search-input {
+  border: none;
+  outline: none;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  font-family: var(--font);
+  color: var(--text);
+  background: transparent;
+  width: 180px;
+}
+
+#search-input::placeholder {
+  color: var(--muted);
+  font-style: italic; /* mirrors placeholder-text italic style */
+}
+
+/* CHANGED: Submit button padding increased for breathing room. */
+.search-form button {
+  background: none;
+  border: none;
+  border-left: 1px dashed var(--border);
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1rem;
+  transition: color var(--transition);
+}
+
+.search-form button:hover {
+  color: var(--accent);
+}
+
+
+/* ============================================================
+   HERO SECTION
+============================================================ */
+/* CHANGED: Hero uses --surface (soft pink) as its background,
+   which is the first "pink" section. The next section (intro)
+   will be white, creating the alternating pattern. */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  /* CHANGED: Vertical padding uses --section-pad token for
+     uniform rhythm; hero gets a slightly taller feel via extra top. */
+  padding: 8rem 0 7rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+/* CHANGED: Hero highlighted span now uses --accent (maroon) instead
+   of --gold. This enforces the single-accent-color rule. */
+.hero-title span {
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ============================================================
+   MAIN CONTENT SECTIONS
+   Alternating background pattern:
+     hero          → --surface (pink)   ← established above
+     intro         → --bg      (white)
+     about         → --surface (pink)
+     contact       → --bg      (white)
+   CHANGED: Previously every section used --surface as default.
+   Now only alternating sections use it so pink reads as an
+   accent rather than the default canvas color.
+============================================================ */
+
+/* ── Intro / "What We're About" section ───────────────────── */
+/* CHANGED: Explicitly white (--bg) so it contrasts with the
+   pink hero above and the pink about-section below. */
+.intro-section {
+  background: var(--bg);
+  padding: var(--section-pad);
+}
+
+/* CHANGED: Section headings now use --accent (maroon) so the
+   single accent color anchors every section visually. */
+.intro-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.25rem;
+  color: var(--accent);
+}
+
+.intro-section p + p {
+  margin-top: 1rem;
+}
+
+.intro-section p {
+  color: var(--muted);
+}
+
+/* ── About Section (Feature #2) ───────────────────────────── */
+/* TODO: Feature #2 — Build out team bios, mission statement cards, etc. */
+/* CHANGED: Keeps --surface background (pink) — second in the
+   alternating sequence (hero=pink, intro=white, about=pink). */
+.about-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: var(--section-pad);
+}
+
+/* CHANGED: Heading uses --accent for consistency. */
+.about-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.25rem;
+  color: var(--accent);
+}
+
+/* ── Contact Section (Feature #3) ────────────────────────── */
+/* TODO: Feature #3 — Build out contact form, map, social links, etc. */
+/* CHANGED: Explicitly white (--bg) — fourth in the alternating
+   sequence (hero=pink, intro=white, about=pink, contact=white). */
+.contact-section {
+  background: var(--bg);
+  padding: var(--section-pad);
+}
+
+/* CHANGED: Heading uses --accent for consistency. */
+.contact-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.25rem;
+  color: var(--accent);
+}
+
+/* ── Shared Placeholder Style ─────────────────────────────── */
+/* CHANGED: Applied to both .placeholder-text (About Us, Contact)
+   AND the search form area. Dashed border + italic muted text is
+   the single visual language for "feature hook — not yet built."
+   Border color brightened slightly to var(--accent) at low opacity
+   so placeholders tie back to the accent palette. */
+.placeholder-text {
+  color: var(--muted);
+  font-style: italic;
+  border: 1px dashed var(--border);
+  padding: 2rem 2.5rem;
+  border-radius: var(--radius);
+  display: block;
+  width: 100%;
+}
+
+
+/* ============================================================
+   FOOTER
+============================================================ */
+/* CHANGED: Footer uses --surface so it visually "closes" the page
+   with the same warm tint as other surface sections. */
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-copy {
+  font-size: 0.825rem;
+  color: var(--muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.footer-links a {
+  font-size: 0.825rem;
+  color: var(--muted);
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+
+/* ============================================================
+   RESPONSIVE DESIGN (Feature #5)
+   TODO: Feature #5 — Expand these breakpoints as new features are added.
+   Breakpoints:
+     Mobile:  max-width 600px
+     Tablet:  601px – 900px
+     Desktop: 901px+
+============================================================ */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .container {
+    padding: 0 2rem;
+  }
+
+  #search-input {
+    width: 130px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  /* Show hamburger, hide nav list by default */
+  .nav-toggle {
+    display: flex;
+  }
+
+  .main-nav {
+    position: relative;
+  }
+
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    min-width: 160px;
+    z-index: 200;
+  }
+
+  /* JS toggles this class */
+  .nav-list.is-open {
+    display: flex;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  /* CHANGED: Mobile nav links lose the bottom-border hover trick
+     (meaningless in a vertical dropdown) — keep color shift only. */
+  .nav-list a {
+    display: block;
+    padding: 0.6rem 1rem;
+    border-radius: 0;
+    border-bottom: none;
+  }
+
+  /* Shrink or hide search on very small screens */
+  .search-form {
+    display: none;
+  }
+
+  .header-inner {
+    justify-content: space-between;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .hero {
+    padding: 4rem 0;
+  }
+
+  /* CHANGED: section padding scaled down for mobile. */
+  .intro-section,
+  .about-section,
+  .contact-section {
+    padding: 3.5rem 0;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
