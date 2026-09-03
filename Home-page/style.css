@@ -10,6 +10,9 @@
                           buttons, links, highlights, hover states)
    CHANGED: Removed --gold entirely; --accent is now the sole
             highlight color used everywhere consistently.
+   CHANGED: Added [data-theme="dark"] override block + .theme-toggle
+            component (sun/moon pill switch) replacing the old
+            second profile icon.
    Typography: system-font stack — no external dependency
 ============================================================ */
 
@@ -40,35 +43,27 @@
   /* CHANGED: Added a max content width (~1100px) so text doesn't
      stretch edge-to-edge on large screens (readability requirement). */
   --content-max: 1140px;
+
+  --tap-target: 2.25rem;
 }
 
-/* ── Profile button: icon-only button next to theme toggle ──── */
-.profile-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--tap-target);
-  height: var(--tap-target);
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  flex-shrink: 0;
-  color: var(--text);
-  transition: color var(--transition);
-}
-
-.profile-btn:hover {
-  color: var(--accent);
-}
-
-.profile-btn .icon-profile {
-  width: 24px;
-  height: 24px;
+/* ── Dark mode palette ────────────────────────────────────────
+   Toggled via [data-theme="dark"] on <html>. All colors are
+   CSS variables already, so most of the site inherits this
+   automatically — we only need to override the tokens here. */
+[data-theme="dark"] {
+  --bg:      #15100f;
+  --surface: #1f1616;
+  --border:  #3a2727;
+  --text:    #f2e8e8;
+  --muted:   #c7abab;
+  --accent:  #e05a5a;
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--bg);
+  transition: background var(--transition);
 }
 
 body {
@@ -77,6 +72,7 @@ body {
   line-height: 1.7;
   color: var(--text);
   background: var(--bg);
+  transition: background var(--transition), color var(--transition);
 }
 
 a {
@@ -145,6 +141,7 @@ ul {
   z-index: 100;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .header-inner {
@@ -217,7 +214,7 @@ ul {
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: transform var(--transition), opacity var(--transition);
+  transition: transform var(--transition), opacity var(--transition), background var(--transition);
 }
 
 /* ── Search Bar (Feature #4) ──────────────────────────────── */
@@ -235,6 +232,7 @@ ul {
   overflow: hidden;
   flex-shrink: 0;
   background: var(--bg);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 /* CHANGED: Input padding increased from 0.4rem/0.75rem to
@@ -271,12 +269,15 @@ ul {
   color: var(--accent);
 }
 
+/* ── Header icon row (account + theme toggle) ────────────────
+   CHANGED: Both sit on the same tap-target size (--tap-target)
+   so they align identically across all pages. */
 .account-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--tap-target);
+  height: var(--tap-target);
   flex-shrink: 0;
   color: var(--muted);
   border-radius: 50%;
@@ -299,6 +300,52 @@ ul {
   text-decoration: none;
 }
 
+/* ── Theme toggle (sun / moon pill switch) ───────────────────
+   Replaces the old second profile icon. Sits at the end of the
+   header icon row, same height as .account-link for alignment. */
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+  border: 2px solid var(--text);
+  border-radius: 999px;
+  background: var(--bg);
+  padding: 0 3px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  color: var(--text);
+  pointer-events: none;
+}
+
+.theme-toggle .icon-sun { margin-right: auto; }
+.theme-toggle .icon-moon { margin-left: auto; }
+
+.theme-toggle .theme-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform var(--transition), background var(--transition);
+}
+
+[data-theme="dark"] .theme-toggle .theme-toggle-thumb {
+  transform: translateX(24px);
+}
+
 
 /* ============================================================
    HERO SECTION
@@ -313,6 +360,7 @@ ul {
      uniform rhythm; hero gets a slightly taller feel via extra top. */
   padding: 8rem 0 7rem;
   text-align: center;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .hero-title {
@@ -357,6 +405,7 @@ ul {
 .intro-section {
   background: var(--bg);
   padding: var(--section-pad);
+  transition: background var(--transition);
 }
 
 /* CHANGED: Section headings now use --accent (maroon) so the
@@ -384,6 +433,7 @@ ul {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: var(--section-pad);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 /* CHANGED: Heading uses --accent for consistency. */
@@ -400,6 +450,7 @@ ul {
 .contact-section {
   background: var(--bg);
   padding: var(--section-pad);
+  transition: background var(--transition);
 }
 
 /* CHANGED: Heading uses --accent for consistency. */
@@ -431,6 +482,7 @@ ul {
   border-bottom: 1px solid var(--border);
   padding: 5rem 0 4rem;
   text-align: center;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .eyebrow {
@@ -472,6 +524,7 @@ ul {
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 8px 18px rgba(128, 0, 0, 0.04);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .contact-card h2 {
@@ -498,6 +551,8 @@ ul {
   color: var(--text);
 }
 
+/* CHANGED: background switched from hardcoded #fff to var(--bg)
+   so form fields follow dark mode instead of staying white. */
 .form-row input,
 .form-row textarea {
   width: 100%;
@@ -506,7 +561,8 @@ ul {
   padding: 0.8rem 0.9rem;
   font: inherit;
   color: var(--text);
-  background: #fff;
+  background: var(--bg);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .form-row input:focus,
@@ -567,6 +623,7 @@ ul {
   background: var(--surface);
   border-top: 1px solid var(--border);
   padding: 1.5rem 0;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .footer-inner {
