@@ -42,6 +42,31 @@
   --content-max: 1140px;
 }
 
+/* ── Profile button: icon-only button next to theme toggle ──── */
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  height: var(--tap-target);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--text);
+  transition: color var(--transition);
+}
+
+.profile-btn:hover {
+  color: var(--accent);
+}
+
+.profile-btn .icon-profile {
+  width: 24px;
+  height: 24px;
+}
+
 html {
   scroll-behavior: smooth;
 }
