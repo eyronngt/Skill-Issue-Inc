@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | Skill Issue Inc.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Skill Issue Inc.</a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul id="main-nav" class="nav-list">
+          <li><a href="index.html#hero">Home</a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <form id="search-form" class="search-form" role="search" autocomplete="off">
+        <input id="search-input" type="text" placeholder="Search..." aria-label="Search" />
+        <button type="submit" aria-label="Submit search">&#9906;</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="about-page">
+    <section class="contact-hero">
+      <div class="container">
+        <p class="eyebrow">Who we are</p>
+        <h1>About Skill Issue Inc.</h1>
+        <p>We learn together, solve problems creatively, and keep moving forward through every challenge.</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <h2>About Us</h2>
+        <p>Skill Issue Inc. is a collaborative group focused on continuous learning and creative problem-solving in tech and programming.</p>
+        <p>Mga walang bitaw</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; 2026 Skill Issue Inc. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="about.html" aria-current="page">About</a></li>
+        <li><a href="#" aria-label="GitHub">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('nav-toggle');
+    const navList = document.getElementById('main-nav');
+
+    toggle.addEventListener('click', function () {
+      const isOpen = navList.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    navList.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navList.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>
