@@ -25,35 +25,32 @@
       <!-- Site Logo / Name -->
       <a href="index.html" class="logo">Skill Issue Inc.</a>
 
-      <!-- TODO: Feature #1 — Navigation Menu
-           Add page links (Home, About, Contact, etc.) inside this <ul>.
-           A mobile hamburger toggle can also be wired up here. -->
+      <!-- Navigation Menu -->
       <nav class="main-nav" aria-label="Main navigation">
-        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+        <button class="nav-toggle has-tooltip" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu" data-tooltip="Open menu">
           <span></span><span></span><span></span>
         </button>
         <ul id="main-nav" class="nav-list">
-          <li><a href="index.html#hero">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a class="has-tooltip" data-tooltip="Go to Home" href="index.html#hero">Home</a></li>
+          <li><a class="has-tooltip" data-tooltip="Learn about us" href="about.html">About</a></li>
+          <li><a class="has-tooltip" data-tooltip="Contact us" href="contact.html">Contact</a></li>
         </ul>
       </nav>
 
-      <!-- TODO: Feature #4 — Search Bar
-           Wire up search logic (filter, API call, etc.) to this form. -->
+      <!-- Search Bar -->
       <form id="search-form" class="search-form" role="search" autocomplete="off">
         <input id="search-input" type="text" placeholder="Search..." aria-label="Search" />
-        <button type="submit" aria-label="Submit search">&#9906;</button>
+        <button type="submit" aria-label="Submit search" class="has-tooltip" data-tooltip="Search site">&#9906;</button>
       </form>
 
-      <a href="#" class="account-link" aria-label="Account" title="Account">
+      <a href="#" class="account-link has-tooltip" aria-label="Account" title="Account" data-tooltip="Account">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <circle cx="12" cy="8" r="3.5"></circle>
           <path d="M5 20c.8-3.1 3.3-5 7-5s6.2 1.9 7 5"></path>
         </svg>
       </a>
 
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+      <button id="theme-toggle" class="theme-toggle has-tooltip" type="button" aria-label="Toggle dark mode" aria-pressed="false" data-tooltip="Toggle dark mode">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <circle cx="12" cy="12" r="4"></circle>
           <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
@@ -68,9 +65,7 @@
   </header>
 
 
-  <!-- ========================================================
-       HERO SECTION
-  ======================================================== -->
+  <!-- HERO SECTION -->
   <section id="hero" class="hero">
     <div class="container hero-inner">
       <h1 class="hero-title">Welcome to <span>Skill Issue Inc.</span></h1>
@@ -78,12 +73,9 @@
         A place where passionate people tackle problems, share knowledge,<br />
         and turn every challenge into a learning opportunity.
       </p>
-      <!-- TODO: Update href when target page is ready -->
       <a href="about.html" class="btn btn-primary">Learn More</a>
     </div>
   </section>
-
-
 
   <main id="main-content">
     <section class="intro-section">
@@ -95,7 +87,6 @@
           a place here for you. We believe that every "skill issue" is just a skill waiting to be unlocked.
         </p>
         <p>
-          <!-- TODO: Replace this placeholder text with real content once the group's goals are finalized. -->
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula sapien eget felis tincidunt,
           vel dapibus velit accumsan. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
           ac turpis egestas. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquet nisl.
@@ -115,10 +106,7 @@
 
   </main>
 
-
-  <!-- ========================================================
-       FOOTER
-  ======================================================== -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-copy">&copy; 2026 Skill Issue Inc. All rights reserved.</p>
@@ -130,12 +118,7 @@
     </div>
   </footer>
 
-
-  <!-- ========================================================
-       MINIMAL JS — Mobile nav toggle + theme toggle
-       TODO: Feature #5 (Responsive) — Expand toggle behaviour as needed.
-       TODO: Feature #6 (User-Friendly UI) — Add focus trap, ARIA updates, etc.
-  ======================================================== -->
+  <!-- MINIMAL JS — Mobile nav toggle + theme toggle -->
   <script>
     const toggle = document.getElementById('nav-toggle');
     const navList = document.getElementById('main-nav');

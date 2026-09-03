@@ -1,20 +1,95 @@
 /* ============================================================
    style.css — Skill Issue Inc.
-   Palette (Polytechnic University of the Philippines colors):
-     --bg:      #ffffff  (page background — white sections)
-     --surface: #fdf5f5  (alternate sections — soft warm pink)
-     --border:  #e8d0d0  (subtle dividers — warm tint)
-     --text:    #1f2328  (primary text)
-     --muted:   #6b5050  (secondary text, placeholders)
-     --accent:  #800000  (PUP Maroon — SINGLE accent: headings,
-                          buttons, links, highlights, hover states)
-   CHANGED: Removed --gold entirely; --accent is now the sole
-            highlight color used everywhere consistently.
-   CHANGED: Added [data-theme="dark"] override block + .theme-toggle
-            component (sun/moon pill switch) replacing the old
-            second profile icon.
-   Typography: system-font stack — no external dependency
+   (existing content preserved; only relevant additions shown)
 ============================================================ */
+
+/* ... existing CSS above remains unchanged ... */
+
+/* Ensure form-row can host tooltips and not be clipped */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative; /* <-- allow tooltip positioning */
+  z-index: 1;
+}
+
+/* Tooltip tokens (reuse site variables; adapt to theme) */
+:root {
+  --field-tooltip-bg: rgba(31, 35, 40, 0.95);
+  --field-tooltip-color: #ffffff;
+  --field-tooltip-pad: 6px 8px;
+  --field-tooltip-radius: 6px;
+  --field-tooltip-font: 0.82rem;
+  --field-tooltip-offset: 8px;
+}
+
+[data-theme="dark"] {
+  --field-tooltip-bg: rgba(242, 232, 232, 0.95);
+  --field-tooltip-color: #15100f;
+}
+
+/* Form-row tooltip (appears above the input) */
+.form-row.has-tooltip[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 0;
+  transform: translateY(0);
+  bottom: calc(100% + var(--field-tooltip-offset));
+  background: var(--field-tooltip-bg);
+  color: var(--field-tooltip-color);
+  padding: var(--field-tooltip-pad);
+  border-radius: var(--field-tooltip-radius);
+  font-size: var(--field-tooltip-font);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 500;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* small caret */
+.form-row.has-tooltip[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  bottom: calc(100% + calc(var(--field-tooltip-offset) - 6px));
+  width: 8px;
+  height: 8px;
+  background: var(--field-tooltip-bg);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease;
+  z-index: 499;
+}
+
+/* Show tooltip on hover or when any child has focus (keyboard accessible) */
+.form-row.has-tooltip:hover[data-tooltip]::after,
+.form-row.has-tooltip:focus-within[data-tooltip]::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-4px);
+}
+
+.form-row.has-tooltip:hover[data-tooltip]::before,
+.form-row.has-tooltip:focus-within[data-tooltip]::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* Hide these field tooltips on very small touch screens */
+@media (max-width: 420px) {
+  .form-row.has-tooltip[data-tooltip]::after,
+  .form-row.has-tooltip[data-tooltip]::before {
+    display: none;
+  }
+}
+
 
 /* ── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after {
@@ -30,27 +105,17 @@
   --text:    #1f2328;
   --muted:   #6b5050;
   --accent:  #800000;
-  /* CHANGED: --gold removed; maroon is now the single accent color */
 
   --font: -apple-system, "Segoe UI", system-ui, Arial, sans-serif;
   --radius: 6px;
   --transition: 0.2s ease;
 
-  /* CHANGED: Added a shared section-padding token so every section
-     uses the same vertical rhythm (uniform spacing requirement). */
   --section-pad: 6rem 0;
-
-  /* CHANGED: Added a max content width (~1100px) so text doesn't
-     stretch edge-to-edge on large screens (readability requirement). */
   --content-max: 1140px;
-
   --tap-target: 2.25rem;
 }
 
-/* ── Dark mode palette ────────────────────────────────────────
-   Toggled via [data-theme="dark"] on <html>. All colors are
-   CSS variables already, so most of the site inherits this
-   automatically — we only need to override the tokens here. */
+/* Dark mode tokens */
 [data-theme="dark"] {
   --bg:      #15100f;
   --surface: #1f1616;
@@ -89,9 +154,6 @@ ul {
 }
 
 /* ── Layout Container ─────────────────────────────────────── */
-/* TODO: Feature #5 (Responsive Design) — adjust max-width or padding as needed */
-/* CHANGED: max-width tightened to --content-max (1140px) to prevent
-   text from stretching on wide screens. Previously 1400px. */
 .container {
   width: 100%;
   max-width: var(--content-max);
@@ -100,7 +162,6 @@ ul {
 }
 
 /* ── Buttons ──────────────────────────────────────────────── */
-/* TODO: Feature #6 (User-Friendly UI) — add focus-visible styles, size variants */
 .btn {
   display: inline-block;
   padding: 0.65rem 1.6rem;
@@ -113,9 +174,6 @@ ul {
   border: 2px solid transparent;
 }
 
-/* CHANGED: btn-primary is now a ghost/outline button (transparent fill,
-   maroon border + text) instead of a solid dark block. This fits the
-   minimalist palette while still using the single accent color. */
 .btn-primary {
   background: transparent;
   color: var(--accent);
@@ -129,11 +187,8 @@ ul {
   text-decoration: none;
 }
 
-
 /* ============================================================
    HEADER
-   Feature Hook: #main-nav (Feature #1 — Navigation Menu)
-   Feature Hook: #search-form (Feature #4 — Search Bar)
 ============================================================ */
 .site-header {
   position: sticky;
@@ -151,7 +206,6 @@ ul {
   height: 70px;
 }
 
-/* Logo */
 .logo {
   font-size: 1.1rem;
   font-weight: 700;
@@ -165,8 +219,6 @@ ul {
   text-decoration: none;
 }
 
-/* ── Navigation Menu (Feature #1) ─────────────────────────── */
-/* TODO: Feature #1 — Wire up active states, dropdowns, etc. */
 .main-nav {
   flex: 1;
 }
@@ -177,9 +229,6 @@ ul {
   align-items: center;
 }
 
-/* CHANGED: Nav link hover now shifts color to --accent (maroon) and
-   adds a bottom-border underline-style effect instead of a background
-   tint, signalling interactivity with the single accent color. */
 .nav-list a {
   color: var(--muted);
   font-size: 0.9rem;
@@ -195,7 +244,6 @@ ul {
   text-decoration: none;
 }
 
-/* Hamburger toggle — hidden on desktop */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -217,13 +265,7 @@ ul {
   transition: transform var(--transition), opacity var(--transition), background var(--transition);
 }
 
-/* ── Search Bar (Feature #4) ──────────────────────────────── */
-/* TODO: Feature #4 — Add working search logic, results dropdown, etc. */
-/* CHANGED: Search bar wrapped in a dashed-border placeholder box
-   matching .placeholder-text style, so it reads as "to be built"
-   consistently with About Us and Contact. The outer .search-form
-   border is now dashed + maroon-tinted; internal padding increased
-   so it doesn't look cramped. */
+/* ── Search Bar ───────────────────────────────────────────── */
 .search-form {
   display: flex;
   align-items: center;
@@ -235,8 +277,6 @@ ul {
   transition: background var(--transition), border-color var(--transition);
 }
 
-/* CHANGED: Input padding increased from 0.4rem/0.75rem to
-   0.55rem/1rem so the field feels roomier. */
 #search-input {
   border: none;
   outline: none;
@@ -250,10 +290,9 @@ ul {
 
 #search-input::placeholder {
   color: var(--muted);
-  font-style: italic; /* mirrors placeholder-text italic style */
+  font-style: italic;
 }
 
-/* CHANGED: Submit button padding increased for breathing room. */
 .search-form button {
   background: none;
   border: none;
@@ -269,9 +308,6 @@ ul {
   color: var(--accent);
 }
 
-/* ── Header icon row (account + theme toggle) ────────────────
-   CHANGED: Both sit on the same tap-target size (--tap-target)
-   so they align identically across all pages. */
 .account-link {
   display: inline-flex;
   align-items: center;
@@ -300,9 +336,7 @@ ul {
   text-decoration: none;
 }
 
-/* ── Theme toggle (sun / moon pill switch) ───────────────────
-   Replaces the old second profile icon. Sits at the end of the
-   header icon row, same height as .account-link for alignment. */
+/* ── Theme toggle ─────────────────────────────────────────── */
 .theme-toggle {
   position: relative;
   display: inline-flex;
@@ -346,18 +380,107 @@ ul {
   transform: translateX(24px);
 }
 
+/* =========================
+   Accessible tooltips
+   Uses data-tooltip + .has-tooltip
+   ========================= */
+
+/* Tooltip color tokens (adapt to theme) */
+:root {
+  --tooltip-bg: rgba(31, 35, 40, 0.95);
+  --tooltip-color: #ffffff;
+  --tooltip-radius: 6px;
+  --tooltip-pad: 6px 8px;
+  --tooltip-font-size: 0.8rem;
+  --tooltip-offset: 8px;
+}
+
+[data-theme="dark"] {
+  --tooltip-bg: rgba(242, 232, 232, 0.95);
+  --tooltip-color: #15100f;
+}
+
+/* Base tooltip style for any element with data-tooltip */
+.has-tooltip {
+  position: relative;
+}
+
+/* The tooltip pseudo-element (decorative) */
+.has-tooltip[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(100% + var(--tooltip-offset));
+  background: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  padding: var(--tooltip-pad);
+  border-radius: var(--tooltip-radius);
+  font-size: var(--tooltip-font-size);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 400;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Small caret */
+.has-tooltip[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(100% + calc(var(--tooltip-offset) - 6px));
+  width: 8px;
+  height: 8px;
+  background: var(--tooltip-bg);
+  transform-origin: center;
+  rotate: 45deg;
+  border-radius: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease;
+  z-index: 399;
+}
+
+/* Show on hover and focus (keyboard accessible) */
+.has-tooltip:hover[data-tooltip],
+.has-tooltip:focus[data-tooltip],
+.has-tooltip:focus-visible[data-tooltip] {
+  outline: none;
+}
+
+.has-tooltip:hover[data-tooltip]::after,
+.has-tooltip:focus[data-tooltip]::after,
+.has-tooltip:focus-visible[data-tooltip]::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.has-tooltip:hover[data-tooltip]::before,
+.has-tooltip:focus[data-tooltip]::before,
+.has-tooltip:focus-visible[data-tooltip]::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hide tooltips on very small touch screens */
+@media (max-width: 420px) {
+  .has-tooltip[data-tooltip]::after,
+  .has-tooltip[data-tooltip]::before {
+    display: none;
+  }
+}
 
 /* ============================================================
    HERO SECTION
 ============================================================ */
-/* CHANGED: Hero uses --surface (soft pink) as its background,
-   which is the first "pink" section. The next section (intro)
-   will be white, creating the alternating pattern. */
 .hero {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  /* CHANGED: Vertical padding uses --section-pad token for
-     uniform rhythm; hero gets a slightly taller feel via extra top. */
   padding: 8rem 0 7rem;
   text-align: center;
   transition: background var(--transition), border-color var(--transition);
@@ -371,8 +494,6 @@ ul {
   margin-bottom: 1rem;
 }
 
-/* CHANGED: Hero highlighted span now uses --accent (maroon) instead
-   of --gold. This enforces the single-accent-color rule. */
 .hero-title span {
   color: var(--accent);
 }
@@ -386,30 +507,16 @@ ul {
   margin-right: auto;
 }
 
-
 /* ============================================================
    MAIN CONTENT SECTIONS
-   Alternating background pattern:
-     hero          → --surface (pink)   ← established above
-     intro         → --bg      (white)
-     about         → --surface (pink)
-     contact       → --bg      (white)
-   CHANGED: Previously every section used --surface as default.
-   Now only alternating sections use it so pink reads as an
-   accent rather than the default canvas color.
 ============================================================ */
 
-/* ── Intro / "What We're About" section ───────────────────── */
-/* CHANGED: Explicitly white (--bg) so it contrasts with the
-   pink hero above and the pink about-section below. */
 .intro-section {
   background: var(--bg);
   padding: var(--section-pad);
   transition: background var(--transition);
 }
 
-/* CHANGED: Section headings now use --accent (maroon) so the
-   single accent color anchors every section visually. */
 .intro-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
@@ -424,10 +531,6 @@ ul {
   color: var(--muted);
 }
 
-/* ── About Section (Feature #2) ───────────────────────────── */
-/* TODO: Feature #2 — Build out team bios, mission statement cards, etc. */
-/* CHANGED: Keeps --surface background (pink) — second in the
-   alternating sequence (hero=pink, intro=white, about=pink). */
 .about-section {
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -436,24 +539,18 @@ ul {
   transition: background var(--transition), border-color var(--transition);
 }
 
-/* CHANGED: Heading uses --accent for consistency. */
 .about-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
   color: var(--accent);
 }
 
-/* ── Contact Section (Feature #3) ────────────────────────── */
-/* TODO: Feature #3 — Build out contact form, map, social links, etc. */
-/* CHANGED: Explicitly white (--bg) — fourth in the alternating
-   sequence (hero=pink, intro=white, about=pink, contact=white). */
 .contact-section {
   background: var(--bg);
   padding: var(--section-pad);
   transition: background var(--transition);
 }
 
-/* CHANGED: Heading uses --accent for consistency. */
 .contact-section h2 {
   font-size: 1.6rem;
   margin-bottom: 1.25rem;
@@ -472,7 +569,6 @@ ul {
   max-width: 640px;
 }
 
-/* ── Contact Page Styles ─────────────────────────────────── */
 .contact-page {
   background: var(--bg);
 }
@@ -551,8 +647,6 @@ ul {
   color: var(--text);
 }
 
-/* CHANGED: background switched from hardcoded #fff to var(--bg)
-   so form fields follow dark mode instead of staying white. */
 .form-row input,
 .form-row textarea {
   width: 100%;
@@ -597,12 +691,6 @@ ul {
   font-size: 1rem;
 }
 
-/* ── Shared Placeholder Style ─────────────────────────────── */
-/* CHANGED: Applied to both .placeholder-text (About Us, Contact)
-   AND the search form area. Dashed border + italic muted text is
-   the single visual language for "feature hook — not yet built."
-   Border color brightened slightly to var(--accent) at low opacity
-   so placeholders tie back to the accent palette. */
 .placeholder-text {
   color: var(--muted);
   font-style: italic;
@@ -613,12 +701,7 @@ ul {
   width: 100%;
 }
 
-
-/* ============================================================
-   FOOTER
-============================================================ */
-/* CHANGED: Footer uses --surface so it visually "closes" the page
-   with the same warm tint as other surface sections. */
+/* FOOTER */
 .site-footer {
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -653,17 +736,7 @@ ul {
   color: var(--accent);
 }
 
-
-/* ============================================================
-   RESPONSIVE DESIGN (Feature #5)
-   TODO: Feature #5 — Expand these breakpoints as new features are added.
-   Breakpoints:
-     Mobile:  max-width 600px
-     Tablet:  601px – 900px
-     Desktop: 901px+
-============================================================ */
-
-/* Tablet */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .container {
     padding: 0 2rem;
@@ -674,9 +747,7 @@ ul {
   }
 }
 
-/* Mobile */
 @media (max-width: 600px) {
-  /* Show hamburger, hide nav list by default */
   .nav-toggle {
     display: flex;
   }
@@ -703,7 +774,6 @@ ul {
     z-index: 200;
   }
 
-  /* JS toggles this class */
   .nav-list.is-open {
     display: flex;
   }
@@ -712,8 +782,6 @@ ul {
     width: 100%;
   }
 
-  /* CHANGED: Mobile nav links lose the bottom-border hover trick
-     (meaningless in a vertical dropdown) — keep color shift only. */
   .nav-list a {
     display: block;
     padding: 0.6rem 1rem;
@@ -721,7 +789,6 @@ ul {
     border-bottom: none;
   }
 
-  /* Shrink or hide search on very small screens */
   .search-form {
     display: none;
   }
@@ -738,7 +805,6 @@ ul {
     padding: 4rem 0;
   }
 
-  /* CHANGED: section padding scaled down for mobile. */
   .intro-section,
   .about-section,
   .contact-section {
