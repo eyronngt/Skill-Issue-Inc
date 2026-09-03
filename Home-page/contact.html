@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Skill Issue Inc.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Skill Issue Inc.</a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul id="main-nav" class="nav-list">
+          <li><a href="index.html#hero">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <form id="search-form" class="search-form" role="search" autocomplete="off">
+        <input id="search-input" type="text" placeholder="Search..." aria-label="Search" />
+        <button type="submit" aria-label="Submit search">&#9906;</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="contact-page">
+    <section class="contact-hero">
+      <div class="container">
+        <p class="eyebrow">Let’s connect</p>
+        <h1>Contact Skill Issue Inc.</h1>
+        <p>
+          We’re here to answer questions, explore collaboration opportunities, and help you find the right next step in your learning journey.
+        </p>
+      </div>
+    </section>
+
+    <section class="contact-content">
+      <div class="container contact-grid">
+        <div class="contact-card contact-form-card">
+          <h2>Send a message</h2>
+          <form class="contact-form">
+            <div class="form-row">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" />
+            </div>
+
+            <div class="form-row">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" />
+            </div>
+
+            <div class="form-row">
+              <label for="subject">Subject</label>
+              <input id="subject" name="subject" type="text" placeholder="How can we help?" />
+            </div>
+
+            <div class="form-row">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" placeholder="Tell us a little about your project or question..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
+
+        <aside class="contact-card contact-info-card" aria-label="Contact information">
+          <h2>Reach us</h2>
+          <ul class="contact-list">
+            <li>
+              <span class="label">Email</span>
+              <a href="mailto:hello@skillissueinc.com">hello@skillissueinc.com</a>
+            </li>
+            <li>
+              <span class="label">Phone</span>
+              <a href="tel:+15551234567">+1 (555) 123-4567</a>
+            </li>
+            <li>
+              <span class="label">Location</span>
+              <p>Metro Manila, Philippines</p>
+            </li>
+            <li>
+              <span class="label">Hours</span>
+              <p>Mon – Fri, 9:00 AM – 6:00 PM</p>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; 2026 Skill Issue Inc. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="#" aria-label="GitHub">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('nav-toggle');
+    const navList = document.getElementById('main-nav');
+
+    toggle.addEventListener('click', function () {
+      const isOpen = navList.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    navList.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navList.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>
